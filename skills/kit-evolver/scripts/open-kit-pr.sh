@@ -24,7 +24,7 @@ fi
 if ! git remote get-url origin >/dev/null 2>&1; then
   echo "[!] No 'origin' remote configured in $KIT_DIR yet."
   echo "    Add your GitHub remote first:"
-  echo "    git -C ~/.gemini/config/plugins/agent-kit remote add origin <https://github.com/you/agent-kit.git>"
+  echo "    git -C ~/.gemini/config/plugins/agent-kit remote add origin https://github.com/bmartinsdev/agent-kit.git"
   exit 1
 fi
 

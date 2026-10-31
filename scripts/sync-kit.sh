@@ -27,7 +27,7 @@ if [ -d "$KIT_DIR/.git" ]; then
   else
     echo "--- 1. Remote Status ---"
     echo "  [i] No git remote 'origin' configured yet in $KIT_DIR."
-    echo "      To link to GitHub, run: git -C ~/.gemini/config/plugins/agent-kit remote add origin <git-url>"
+    echo "      To link to GitHub, run: git -C ~/.gemini/config/plugins/agent-kit remote add origin https://github.com/bmartinsdev/agent-kit.git"
   fi
 
   echo ""

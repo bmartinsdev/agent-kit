@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Shared multi-project agent ecosystem with conditional rule modules and universal skills for UI playgrounds, fullstack features, testing, and documentation.",
   "author": "Bruno Martins",
+  "repository": "https://github.com/bmartinsdev/agent-kit",
   "suggestedPrompts": [
     "Audit this project with project-onboarding-auditor and wire conditional rules",
     "Design and build a new UI component in the playground first",

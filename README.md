@@ -2,6 +2,7 @@
 
 A portable, cross-project Antigravity plugin providing a **5-Agent Specialist Workforce**, **9 Universal Skills with Executable Scripts**, **`SessionStart` & `PreToolUse` Hooks**, and an **8-Module Conditional Rule Library** across all workspaces.
 
+- **Repository**: [https://github.com/bmartinsdev/agent-kit](https://github.com/bmartinsdev/agent-kit)
 - **Global Plugin Mount**: `~/.gemini/config/plugins/agent-kit`
 - **Optional Project Shortcut**: `~/p/agent-kit` (symlinked to `~/.gemini/config/plugins/agent-kit`)
 
@@ -9,12 +10,12 @@ A portable, cross-project Antigravity plugin providing a **5-Agent Specialist Wo
 
 ## 🤖 Instructions for AI Agents (One-Prompt Setup & Updates)
 
-> **If a user tells you: *"Setup `<git-repo-url>`"* or *"Update `agent-kit` and onboard this project"*, follow these exact steps:**
+> **If a user tells you: *"Setup https://github.com/bmartinsdev/agent-kit"* or *"Update `agent-kit` and onboard this project"*, follow these exact steps:**
 
 ### Step 1: Install or Update `agent-kit` Globally
 - **Fresh Install (when `~/.gemini/config/plugins/agent-kit` does not exist)**:
   ```bash
-  git clone <git-repo-url> ~/.gemini/config/plugins/agent-kit
+  git clone https://github.com/bmartinsdev/agent-kit.git ~/.gemini/config/plugins/agent-kit
   ~/.gemini/config/plugins/agent-kit/scripts/install.sh
   ```
 - **Update Existing Install**:
