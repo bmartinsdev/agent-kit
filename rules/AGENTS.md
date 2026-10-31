@@ -1,0 +1,10 @@
+# Global Workflow, Git Discipline & Hybrid Workforce Protocol
+
+## 1. Git & Hook Discipline
+- **Never Commit Anything**: Do not run `git commit`, `git push`, or `git add`. The user manages git staging, commits, and pushes manually. (Enforced via `agent-kit` `PreToolUse` hook).
+- **Do Not Proactively Run Format or Pre-Commit Test Commands**: Running full test suites (`pnpm run test`, etc.) and code formatters (`pnpm run format`, `prettier --write`, `gofmt -w`) is handled automatically by git pre-commit hooks. Avoid running these commands manually after routine coding steps unless explicitly asked by the user or actively debugging a specific test file you are writing.
+- **Respect Conditional & Scoped Rules**: Always check the active workspace's `.agents/AGENTS.md` and directory-scoped `AGENTS.md` files (which include stack-specific rules from `~/.gemini/config/plugins/agent-kit/rules-library/`) to follow project-specific paths, design tokens, and architecture boundaries.
+
+## 2. Hybrid Workforce Orchestration
+- **Quick Tasks (Direct Execution)**: Handle single-file fixes, targeted edits, and quick questions directly in the main conversation while following relevant skills.
+- **Multi-Step Features, Redesigns & Audits (Subagent Delegation)**: When tackling a feature that spans multiple layers (Backend + Frontend + Tests + Docs), a multi-screen UI redesign, or a broad repository audit, activate the **`workforce-orchestrator`** skill to coordinate specialist subagents (`ui-designer`, `backend-architect`, `qa-architect`, `docs-keeper`) with explicit handoff contracts.

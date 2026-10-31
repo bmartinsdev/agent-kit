@@ -1,0 +1,12 @@
+{
+  "name": "agent-kit",
+  "displayName": "Bruno's Agent & Skill Kit",
+  "version": "1.0.0",
+  "description": "Shared multi-project agent ecosystem with conditional rule modules and universal skills for UI playgrounds, fullstack features, testing, and documentation.",
+  "author": "Bruno Martins",
+  "suggestedPrompts": [
+    "Audit this project with project-onboarding-auditor and wire conditional rules",
+    "Design and build a new UI component in the playground first",
+    "Sync documentation, task specs, and test suites for recent changes"
+  ]
+}
