@@ -6,6 +6,30 @@ A portable, cross-project Antigravity plugin providing a **5-Agent Specialist Wo
 - **Global Plugin Mount**: `~/.gemini/config/plugins/agent-kit`
 - **Optional Project Shortcut**: `~/p/agent-kit` (symlinked to `~/.gemini/config/plugins/agent-kit`)
 
+```mermaid
+flowchart TD
+    subgraph Kit["🛠️ agent-kit (Global Antigravity Plugin)"]
+        Hooks["🔒 Hooks & Guards\n• SessionStart (auto-onboard & drift check)\n• PreToolUse (blocks git commit/push/add)"]
+        GlobalRules["📜 Global Rules (rules/AGENTS.md)\n• Git & Hook Discipline\n• Hybrid Workforce Protocol\n• Task Re-Evaluation Gate"]
+        RuleLib["📚 Conditional Rule Library (8 Modules)\n• typescript-strict, react-nextjs, ui-playground-first\n• go-daemon, vitest-testing, sqlite-wsl\n• database-orm, docker-ci"]
+        Skills["⚡ 9 Universal Skills + Scripts\n• project-onboarding-auditor, feature-discovery\n• workforce-orchestrator, fullstack-feature-scaffolder\n• ui-design-system, test-architect, spec-and-docs-keeper\n• pre-commit-audit, kit-evolver"]
+        Agents["🤖 5 Specialist Subagents\n• ui-designer • backend-architect\n• qa-architect • docs-keeper\n• code-reviewer"]
+    end
+
+    subgraph Workspace["📁 Any Project Workspace"]
+        ProjectRules["🗂️ Portable Project Rules\n• .agents/rules-library/*.md\n• .agents/AGENTS.md & scoped AGENTS.md"]
+        Workflow["🔄 Development Lifecycle\nDiscover ➔ Spec Re-Eval Gate ➔ Orchestrate ➔ Pre-Commit Audit"]
+    end
+
+    Hooks -->|"Detects unconfigured repo or rule drift"| Skills
+    RuleLib -->|"sync-project-rules.sh copies matching stack rules"| ProjectRules
+    GlobalRules -->|"Governs"| Workflow
+    ProjectRules -->|"Scoped context"| Workflow
+    Skills <-->|"Delegates & coordinates"| Agents
+    Agents -->|"Executes across layers"| Workflow
+    Workflow -->|"kit-evolver opens PR with new lessons"| Kit
+```
+
 ---
 
 ## 🤖 Instructions for AI Agents (One-Prompt Setup & Updates)
@@ -59,44 +83,3 @@ Whenever a new chat starts in any workspace, [`scripts/session-start.py`](./scri
 | **Save a new rule/lesson to the kit** | *"Save this rule to `agent-kit` and open a PR"* | `kit-evolver` (`scripts/open-kit-pr.sh`) |
 | **Check / pull `agent-kit` updates** | *"Check for `agent-kit` updates and sync rules"* | `scripts/sync-kit.sh` |
 
----
-
-## 📂 Complete Architecture
-
-```text
-~/.gemini/config/plugins/agent-kit/
-├── plugin.json                           # Antigravity plugin manifest
-├── hooks.json                            # SessionStart (auto-onboard/update check) & PreToolUse (safety guard)
-├── scripts/
-│   ├── session-start.py                  # Auto-detects unconfigured projects & rule/remote updates
-│   ├── pre-tool-guard.sh                 # Blocks git commit/push/add & ad-hoc test-*.ts scripts
-│   ├── install.sh                        # Portable one-step installer for any machine
-│   └── sync-kit.sh                       # Checks/pulls GitHub updates & syncs project rules
-├── rules/
-│   └── AGENTS.md                         # Always-on global rules & Hybrid Workforce protocol
-├── rules-library/                        # 8 Conditional Rule Modules (synced into .agents/rules-library/)
-│   ├── typescript-strict.md              # Zero `any`, explicit interfaces & shared domain types
-│   ├── react-nextjs.md                   # Async setState in useEffect & complete hook dependency arrays
-│   ├── ui-playground-first.md            # Playground/Kitchen-first UI workflow & semantic tokens
-│   ├── go-daemon.md                      # Go HTTP handler standards, isolated DB tests & version sync
-│   ├── vitest-testing.md                 # Vitest suite standards (no standalone test-*.ts scripts)
-│   ├── sqlite-wsl.md                     # Async @libsql/client usage on WSL2
-│   ├── database-orm.md                   # Schema migrations, parameterized queries, N+1 & test isolation
-│   └── docker-ci.md                      # Multi-stage Dockerfiles, .dockerignore & CI/local parity
-├── agents/                               # 5 Specialist Subagent Personas
-│   ├── ui-designer.md                    # Design System, Playground & Mobbin UX Specialist
-│   ├── backend-architect.md              # Backend, API, Database & Plugin Systems Specialist
-│   ├── qa-architect.md                   # Full-Stack Vitest & Go Test Verification Specialist
-│   ├── docs-keeper.md                    # Specifications, Roadmaps, API Docs & Changelog Specialist
-│   └── code-reviewer.md                  # Pre-Commit Critic, Security & Diff Auditor
-└── skills/                               # 9 Universal Skills with Executable Scripts & References
-    ├── workforce-orchestrator/           # Hybrid orchestrator & subagent handoff contracts
-    ├── feature-discovery/                # Pre-code capability scanner & user interview gate
-    ├── project-onboarding-auditor/       # Stack scanner, rule sync & relative AGENTS.md generator
-    ├── ui-design-system/                 # Token auditor, Playground-first workflow & UI rubric
-    ├── fullstack-feature-scaffolder/     # End-to-end Backend + Plugin + UI + Test synchronizer
-    ├── test-architect/                   # Coverage gap scanner & Vitest/Go test templates
-    ├── spec-and-docs-keeper/             # Doc/version drift checker & API/Changelog blueprints
-    ├── pre-commit-audit/                 # Working tree & git diff quality gate before commit
-    └── kit-evolver/                      # Self-improving router for adding rules/checks from any repo
-```
