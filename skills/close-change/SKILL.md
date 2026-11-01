@@ -31,3 +31,4 @@ Run `commit-approved-change.sh` from the project workspace root:
 ~/.gemini/config/plugins/agent-kit/skills/close-change/scripts/commit-approved-change.sh "<type(scope): concise summary>" "<optional multi-line bulleted body>"
 ```
 This script stages the working tree (`git add -A`), runs `git commit` (triggering the repository's `simple-git-hooks` / `lint-staged` / `pnpm run test:changed` pipeline), and outputs the resulting commit hash and diffstat.
+

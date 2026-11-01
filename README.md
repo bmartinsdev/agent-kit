@@ -1,6 +1,6 @@
 # 🛠️ Shared Agent & Skill Workforce (`agent-kit`)
 
-A portable, cross-project Antigravity plugin providing a **5-Agent Specialist Workforce**, **9 Universal Skills with Executable Scripts**, **`SessionStart` & `PreToolUse` Hooks**, and an **8-Module Conditional Rule Library** across all workspaces.
+A portable, cross-project Antigravity plugin providing a **6-Agent Specialist Workforce**, **10 Universal Skills with Executable Scripts**, **`SessionStart` & `PreToolUse` Hooks**, and an **8-Module Conditional Rule Library** across all workspaces.
 
 - **Repository**: [https://github.com/bmartinsdev/agent-kit](https://github.com/bmartinsdev/agent-kit)
 - **Global Plugin Mount**: `~/.gemini/config/plugins/agent-kit`
@@ -9,16 +9,16 @@ A portable, cross-project Antigravity plugin providing a **5-Agent Specialist Wo
 ```mermaid
 flowchart TD
     subgraph Kit["🛠️ agent-kit (Global Antigravity Plugin)"]
-        Hooks["🔒 Hooks & Guards\n• SessionStart (auto-onboard & drift check)\n• PreToolUse (blocks git commit/push/add)"]
-        GlobalRules["📜 Global Rules (rules/AGENTS.md)\n• Git & Hook Discipline\n• Hybrid Workforce Protocol\n• Task Re-Evaluation Gate"]
+        Hooks["🔒 Hooks & Guards\n• SessionStart (auto-onboard & drift check)\n• PreToolUse (blocks raw git commit/push/add)"]
+        GlobalRules["📜 Global Rules (rules/AGENTS.md)\n• Git & Hook Discipline\n• Hybrid Workforce Protocol\n• Mandatory Task Re-Evaluation Gate\n• Post-Approval Change Closure"]
         RuleLib["📚 Conditional Rule Library (8 Modules)\n• typescript-strict, react-nextjs, ui-playground-first\n• go-daemon, vitest-testing, sqlite-wsl\n• database-orm, docker-ci"]
-        Skills["⚡ 9 Universal Skills + Scripts\n• project-onboarding-auditor, feature-discovery\n• workforce-orchestrator, fullstack-feature-scaffolder\n• ui-design-system, test-architect, spec-and-docs-keeper\n• pre-commit-audit, kit-evolver"]
-        Agents["🤖 5 Specialist Subagents\n• ui-designer • backend-architect\n• qa-architect • docs-keeper\n• code-reviewer"]
+        Skills["⚡ 10 Universal Skills + Scripts\n• project-onboarding-auditor, feature-discovery\n• workforce-orchestrator, fullstack-feature-scaffolder\n• ui-design-system, test-architect, spec-and-docs-keeper\n• pre-commit-audit, close-change, kit-evolver"]
+        Agents["🤖 6 Specialist Subagents\n• ui-designer • backend-architect\n• qa-architect • docs-keeper\n• code-reviewer • change-closer"]
     end
 
     subgraph Workspace["📁 Any Project Workspace"]
         ProjectRules["🗂️ Portable Project Rules\n• .agents/rules-library/*.md\n• .agents/AGENTS.md & scoped AGENTS.md"]
-        Workflow["🔄 Development Lifecycle\nDiscover ➔ Spec Re-Eval Gate ➔ Orchestrate ➔ Pre-Commit Audit"]
+        Workflow["🔄 Development Lifecycle\nSpec Re-Eval Gate ➔ Orchestrate ➔ Pre-Commit Audit ➔ Close Change"]
     end
 
     Hooks -->|"Detects unconfigured repo or rule drift"| Skills
@@ -76,10 +76,12 @@ Whenever a new chat starts in any workspace, [`scripts/session-start.py`](./scri
 | :--- | :--- | :--- |
 | **Onboard a new or existing repo** | *"Onboard this project and wire up conditional rules"* | `project-onboarding-auditor` |
 | **Brainstorm / spec a new feature** | *"Let's plan `<feature>` — scan existing capabilities first"* | `feature-discovery` + `spec-and-docs-keeper` |
+| **Start a planned task or milestone** | *"Let's start Milestone 1"* *(auto-runs specialist audit + interview)* | `workforce-orchestrator` (Task Re-Evaluation Gate) |
 | **Build or redesign UI screens** | *"Redesign `<screen>` using our Playground-first workflow"* | `ui-design-system` + `ui-designer` agent |
 | **Build a full-stack feature/plugin** | *"Build `<feature>` end-to-end across backend and UI"* | `workforce-orchestrator` + `fullstack-feature-scaffolder` |
 | **Fill test coverage gaps** | *"Scan for coverage gaps and add unit tests for `<module>`"* | `test-architect` + `qa-architect` agent |
 | **Review changes before committing** | *"Run a pre-commit audit on my current changes"* | `pre-commit-audit` + `code-reviewer` agent |
+| **Approve & commit completed work** | *"Approved — close the change and commit"* | `close-change` + `change-closer` agent |
 | **Save a new rule/lesson to the kit** | *"Save this rule to `agent-kit` and open a PR"* | `kit-evolver` (`scripts/open-kit-pr.sh`) |
 | **Check / pull `agent-kit` updates** | *"Check for `agent-kit` updates and sync rules"* | `scripts/sync-kit.sh` |
 

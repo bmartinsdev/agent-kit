@@ -23,6 +23,39 @@ if ! git remote get-url origin >/dev/null 2>&1; then
   exit 1
 fi
 
+# Verify every agent, skill, and rule module on disk is documented in README.md
+MISSING_IN_README=()
+for agent_file in agents/*.md; do
+  [ -e "$agent_file" ] || continue
+  agent_name="$(basename "$agent_file" .md)"
+  if ! grep -q "$agent_name" README.md; then
+    MISSING_IN_README+=("agent:$agent_name")
+  fi
+done
+for skill_dir in skills/*/; do
+  [ -d "$skill_dir" ] || continue
+  skill_name="$(basename "$skill_dir")"
+  if ! grep -q "$skill_name" README.md; then
+    MISSING_IN_README+=("skill:$skill_name")
+  fi
+done
+for rule_file in rules-library/*.md; do
+  [ -e "$rule_file" ] || continue
+  rule_name="$(basename "$rule_file" .md)"
+  if ! grep -q "$rule_name" README.md; then
+    MISSING_IN_README+=("rule:$rule_name")
+  fi
+done
+
+if [ "${#MISSING_IN_README[@]}" -gt 0 ]; then
+  echo "[!] Error: README.md is out of sync! The following items are missing from README.md:"
+  for item in "${MISSING_IN_README[@]}"; do
+    echo "    - $item"
+  done
+  echo "    Update README.md before running open-kit-pr.sh."
+  exit 1
+fi
+
 DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 

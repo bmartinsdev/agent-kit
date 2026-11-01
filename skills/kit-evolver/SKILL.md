@@ -30,10 +30,11 @@ Never dump project-specific file paths into global rules, and never trap univers
 | **4. Automated Audit Check or Template** *(Can be grep-checked or templated inside a skill)* | `~/.gemini/config/plugins/agent-kit/skills/<skill>/scripts/*.sh` or `references/*.md` | **Yes** |
 | **5. Hard Command Block** *(A command that must be blocked before execution)* | `~/.gemini/config/plugins/agent-kit/scripts/pre-tool-guard.sh` | **Yes** |
 
-## Step 3: Generalize & Apply the Update
+## Step 3: Generalize, Update `README.md`, & Apply the Update
 
 1. When writing to `~/.gemini/config/plugins/agent-kit/`, phrase rules and scripts in **stack-level, portable terms** (never hardcode user home paths like `/home/<user>`).
-2. If you updated a rule in `rules-library/`, sync it into the current workspace's `.agents/rules-library/` immediately so the active project benefits right away:
+2. **Mandatory `README.md` Sync for PRs**: Whenever adding, renaming, or modifying an agent (`agents/`), skill (`skills/`), rule module (`rules-library/`), or global workflow (`rules/AGENTS.md`) in `agent-kit`, you **MUST** also update `~/.gemini/config/plugins/agent-kit/README.md` (counts, Mermaid architecture diagram, and prompt cheatsheet) in the same PR. `open-kit-pr.sh` enforces this automatically before committing.
+3. If you updated a rule in `rules-library/`, sync it into the current workspace's `.agents/rules-library/` immediately so the active project benefits right away:
    ```bash
    ~/.gemini/config/plugins/agent-kit/skills/project-onboarding-auditor/scripts/sync-project-rules.sh
    ```

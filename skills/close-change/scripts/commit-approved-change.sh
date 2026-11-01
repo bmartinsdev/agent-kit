@@ -33,3 +33,4 @@ fi
 
 echo "3. Commit created successfully:"
 git log -n 1 --stat
+
