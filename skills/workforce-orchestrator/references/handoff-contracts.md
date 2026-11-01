@@ -4,7 +4,21 @@ When invoking a specialist subagent via `define_subagent` and `invoke_subagent`,
 
 ---
 
-## 1. Input Brief Template (Lead Agent → Subagent)
+## 1. Phase 1: Task Re-Evaluation Audit Brief (Read-Only Gate)
+
+Before implementing any task from `tasks/*.md`, spawn the required specialists in parallel in **Read-Only Audit Mode**:
+
+### Audit Prompt Template (Lead Agent → Subagent)
+1. **Mode**: `READ-ONLY TASK RE-EVALUATION AUDIT` (do not edit or create files).
+2. **Target Spec(s)**: Path(s) to the `tasks/*.md` file(s) being evaluated.
+3. **Domain Focus**: What this specialist (`backend-architect`, `ui-designer`, `qa-architect`, `docs-keeper`) must verify in the live codebase.
+4. **Required Output**:
+   - **Codebase Reality vs. Spec**: What is already implemented, partially implemented, or drifted from the spec.
+   - **Domain Questions for User (1–3 max)**: Concrete multiple-choice questions where architectural, UX, testing, or documentation trade-offs exist, each with a `(Recommended)` first option and brief rationale.
+
+---
+
+## 2. Phase 2: Implementation Input Brief Template (Lead Agent → Subagent)
 
 Every `Prompt` sent to `invoke_subagent` must include:
 1. **Objective**: Clear 1–2 sentence goal.
