@@ -58,3 +58,29 @@ Instruct every subagent to return its final message in this compact format:
 - **Follow-Ups / Blockers**:
   - Any version bump, doc update, or open question for the Lead Agent.
 ```
+
+---
+
+## 5. Required Pre-Approval Summary & Manual Testing Guide (Lead Agent → User)
+
+After `code-reviewer` passes with zero `[BLOCKER]` / `[WARNING]` issues and before asking the user to approve/close the change, present this structured summary to the user:
+
+```markdown
+## 📦 Summary of Changes
+- **<Feature / Layer 1> ([`file.tsx`](file:///abs/path/to/file.tsx))**:
+  - Concise summary of what was added, updated, or cleaned up.
+- **<Feature / Layer 2> ([`handler.go`](file:///abs/path/to/handler.go))**:
+  - Concise summary of backend/API/database changes.
+
+## 🧪 How to Test Before Approving
+### 1. Start the Development Environment
+- Command to run (e.g., `pnpm run dev:all`) and local URLs (`http://localhost:3000`, `http://localhost:3000/kitchen`).
+### 2. Test the UI Playground (`/kitchen`)
+- Specific sections, states, and theme toggles to inspect in `/kitchen`.
+### 3. Test End-to-End Application Flows (`/`)
+- Step-by-step user actions to perform and expected visual/API behavior to verify.
+
+## ✅ Automated Verification Status
+- **Working Tree & `code-reviewer` Audit**: Status & any resolved findings.
+- **Lint & Unit Tests**: ESLint, Go test, and Vitest suite results.
+```

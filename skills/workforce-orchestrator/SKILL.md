@@ -39,21 +39,28 @@ Whenever starting a task or milestone from `tasks/`, execute this 4-phase lifecy
 3. **Phase 3 — Spec Lock-In & Execution**:
    - Update the `tasks/*.md` spec(s) to reflect the user's answers so the spec is the single source of truth.
    - Proceed to implementation with the locked handoff contracts. Because plugin-bundled `agents/*.md` subagents (`TypeName: "<agent-name>"`) run with read-only tools (which enforces safety during Phase 1 audits and `code-reviewer` gates), spawn Phase 3 implementation specialists using `define_subagent(..., EnableWriteTools: true)` or `invoke_subagent(TypeName: "self", Role: "<Specialist Role>", ...)`.
-4. **Phase 4 — Mandatory `code-reviewer` Subagent Gate & Post-Approval Change Closure (`close-change`)**:
+4. **Phase 4 — Mandatory `code-reviewer` Gate, Manual Testing Guide & Post-Approval Change Closure (`close-change`)**:
    - Before presenting completed work to the user—and **especially after any mid-task requirement change or scope reduction**—spawn the **`code-reviewer`** subagent (`invoke_subagent(TypeName: "code-reviewer", ...)`) to run `audit-working-tree.sh` and inspect the full `git diff` across all layers for orphaned/leftover code from earlier iterations, redundant wrapper methods, and unreferenced untracked files.
-   - Fix all `[BLOCKER]` and `[WARNING]` findings returned by `code-reviewer`, run `check-doc-drift.sh`, and present the **Pre-Commit Readiness Summary** to the user.
-   - Once the user approves the changes (or asks to close/commit the change), execute **`close-change`** (`commit-approved-change.sh`) to stage all files, trigger pre-commit hooks, and create the Conventional Commit.
+   - Fix all `[BLOCKER]` and `[WARNING]` findings returned by `code-reviewer` and run `check-doc-drift.sh`.
+   - Present the **Pre-Approval Summary of Changes & Manual Testing Guide** (see [handoff-contracts.md](./references/handoff-contracts.md)) to the user, detailing:
+     1. **Summary of Changes** grouped by feature/layer with clickable file links.
+     2. **How to Test Before Approving** with step-by-step manual verification flows (dev server startup command, UI Playground `/kitchen` checks, and main application end-to-end flows).
+     3. **Automated Verification Status** (`code-reviewer` audit, ESLint, backend & frontend unit test results).
+   - Once the user tests and explicitly approves the changes (or asks to close/commit the change), execute **`close-change`** (`commit-approved-change.sh`) to stage all files, trigger pre-commit hooks, and create the Conventional Commit.
 
 ---
 
-## 3. Specialist Roster (`agents/`)
+## 3. Specialist Roster & Dynamic Model Routing (`agents/`)
 
-All 6 specialist agents are natively registered by `agent-kit`:
-- **`ui-designer`**: UI Playground (`/kitchen` / Storybook) first, semantic CSS tokens, Mobbin benchmarking.
-- **`backend-architect`**: Go/Node HTTP routes, SQLite/ORM persistence, plugin registries, isolated `_test.go` suites.
-- **`qa-architect`**: Vitest (`*.test.ts(x)`) + Go test coverage gap elimination.
-- **`docs-keeper`**: `tasks/`, `roadmap.md`, `docs/api.md`, version parity, and `CHANGELOG.md`.
-- **`code-reviewer`**: Independent critic auditing `git diff`, security boundaries, stray files, and playground/version sync.
-- **`change-closer`**: Post-approval commit finalizer that verifies pre-commit readiness and runs `commit-approved-change.sh` after user approval.
+All 6 specialist agents are natively registered by `agent-kit`. To optimize quota and speed without sacrificing code quality, **always set `Model` dynamically on every `invoke_subagent` call** using this matrix instead of defaulting everything to `'inherit'`:
+
+| Subagent | Use `Model: "flash_lite"` | Use `Model: "flash"` | Escalate to `Model: "pro"` (or `"inherit"`) |
+| :--- | :--- | :--- | :--- |
+| **`code-reviewer`** | — | **Routine / Scoped Diffs**: `<= 5` files, UI/token polish, or clean features with no mid-task requirement pivot. | **High-Risk / Post-Pivot Diffs**: `> 5` files across Go + React, auth/SQL/filesystem security paths, or **after any mid-task requirement pivot** to hunt down orphaned code. |
+| **`ui-designer`** | — | **Phase 1 Read-Only Audit** + **Targeted UI Edits**: Adding a variant, updating `/kitchen` states, or restyling a single component. | **Complex UI Architecture**: Multi-step wizards, complex async state/hooks, or full-screen Mobbin redesigns. |
+| **`backend-architect`** | — | **Phase 1 Read-Only Audit** + **Simple Endpoints**: Adding a struct field or wiring a straightforward handler. | **Complex Backend Logic**: New SQLite tables/migrations, plugin interfaces, concurrency/goroutines, or external service integrations. |
+| **`qa-architect`** | — | **Phase 1 Read-Only Audit** + **Standard Test Suites**: Writing Vitest (`*.test.tsx`) or Go (`*_test.go`) unit tests following existing patterns. | **Complex Test Debugging**: Diagnosing flaky async/network tests or designing a new mock harness from scratch. |
+| **`docs-keeper`** | **Quick Syncs**: Single version bump or checking off a task item. | **Phase 1 Audit + Full Milestone Docs**: Updating `docs/api.md`, `CHANGELOG.md`, `roadmap.md`, and `tasks/*.md`. | — *(Never needs `'pro'`)* |
+| **`change-closer`** | **Always**: Running `audit-working-tree.sh`, `check-doc-drift.sh`, and `commit-approved-change.sh`. | — | — *(Never needs `'pro'`)* |
 
 Read [handoff-contracts.md](./references/handoff-contracts.md) for the exact Input Brief and Handoff Report format required for every subagent call.
