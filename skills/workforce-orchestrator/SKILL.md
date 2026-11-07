@@ -50,14 +50,17 @@ Whenever starting a task or milestone from `tasks/`, execute this 4-phase lifecy
 
 ---
 
-## 3. Specialist Roster (`agents/`)
+## 3. Specialist Roster & Dynamic Model Routing (`agents/`)
 
-All 6 specialist agents are natively registered by `agent-kit`:
-- **`ui-designer`**: UI Playground (`/kitchen` / Storybook) first, semantic CSS tokens, Mobbin benchmarking.
-- **`backend-architect`**: Go/Node HTTP routes, SQLite/ORM persistence, plugin registries, isolated `_test.go` suites.
-- **`qa-architect`**: Vitest (`*.test.ts(x)`) + Go test coverage gap elimination.
-- **`docs-keeper`**: `tasks/`, `roadmap.md`, `docs/api.md`, version parity, and `CHANGELOG.md`.
-- **`code-reviewer`**: Independent critic auditing `git diff`, security boundaries, stray files, and playground/version sync.
-- **`change-closer`**: Post-approval commit finalizer that verifies pre-commit readiness and runs `commit-approved-change.sh` after user approval.
+All 6 specialist agents are natively registered by `agent-kit`. To optimize quota and speed without sacrificing code quality, **always set `Model` dynamically on every `invoke_subagent` call** using this matrix instead of defaulting everything to `'inherit'`:
+
+| Subagent | Use `Model: "flash_lite"` | Use `Model: "flash"` | Escalate to `Model: "pro"` (or `"inherit"`) |
+| :--- | :--- | :--- | :--- |
+| **`code-reviewer`** | — | **Routine / Scoped Diffs**: `<= 5` files, UI/token polish, or clean features with no mid-task requirement pivot. | **High-Risk / Post-Pivot Diffs**: `> 5` files across Go + React, auth/SQL/filesystem security paths, or **after any mid-task requirement pivot** to hunt down orphaned code. |
+| **`ui-designer`** | — | **Phase 1 Read-Only Audit** + **Targeted UI Edits**: Adding a variant, updating `/kitchen` states, or restyling a single component. | **Complex UI Architecture**: Multi-step wizards, complex async state/hooks, or full-screen Mobbin redesigns. |
+| **`backend-architect`** | — | **Phase 1 Read-Only Audit** + **Simple Endpoints**: Adding a struct field or wiring a straightforward handler. | **Complex Backend Logic**: New SQLite tables/migrations, plugin interfaces, concurrency/goroutines, or external service integrations. |
+| **`qa-architect`** | — | **Phase 1 Read-Only Audit** + **Standard Test Suites**: Writing Vitest (`*.test.tsx`) or Go (`*_test.go`) unit tests following existing patterns. | **Complex Test Debugging**: Diagnosing flaky async/network tests or designing a new mock harness from scratch. |
+| **`docs-keeper`** | **Quick Syncs**: Single version bump or checking off a task item. | **Phase 1 Audit + Full Milestone Docs**: Updating `docs/api.md`, `CHANGELOG.md`, `roadmap.md`, and `tasks/*.md`. | — *(Never needs `'pro'`)* |
+| **`change-closer`** | **Always**: Running `audit-working-tree.sh`, `check-doc-drift.sh`, and `commit-approved-change.sh`. | — | — *(Never needs `'pro'`)* |
 
 Read [handoff-contracts.md](./references/handoff-contracts.md) for the exact Input Brief and Handoff Report format required for every subagent call.
