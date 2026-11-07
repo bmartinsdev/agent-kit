@@ -29,7 +29,20 @@ Every `Prompt` sent to `invoke_subagent` must include:
 
 ---
 
-## 2. Required Handoff Report (Subagent → Lead Agent)
+## 3. Phase 4: Mandatory `code-reviewer` Critic Brief (Pre-Handoff & Post-Pivot Gate)
+
+Before presenting a multi-file task to the user—and after any mid-task requirement change or scope simplification—spawn `code-reviewer` (`invoke_subagent(TypeName: "code-reviewer", ...)`):
+
+1. **Mode**: `READ-ONLY PRE-COMMIT & ORPHANED CODE CRITIC`.
+2. **Scope Context**: Summarize the final locked requirements and explicitly note any features/controls that were simplified or removed mid-task so `code-reviewer` knows what leftover scaffolding to hunt down.
+3. **Required Checks**:
+   - Run `~/.gemini/config/plugins/agent-kit/skills/pre-commit-audit/scripts/audit-working-tree.sh`.
+   - Inspect `git diff` across all layers (Go interfaces/structs/handlers, React components/contexts, tests, docs) for leftover code from discarded iterations, redundant wrapper functions, and unreferenced untracked files.
+4. **Required Output**: Severity-tagged findings (`[BLOCKER]`, `[WARNING]`, `[NIT]`) with exact `file:line` references and verdict (`READY TO COMMIT` vs `CHANGES NEEDED`).
+
+---
+
+## 4. Required Handoff Report (Subagent → Lead Agent)
 
 Instruct every subagent to return its final message in this compact format:
 

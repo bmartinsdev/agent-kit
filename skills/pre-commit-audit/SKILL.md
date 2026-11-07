@@ -17,14 +17,14 @@ Execute the automated working tree check:
 ~/.gemini/config/plugins/agent-kit/skills/pre-commit-audit/scripts/audit-working-tree.sh
 ```
 
-## Step 2: Inspect the Diff Against the Review Rubric
+## Step 2: Spawn `code-reviewer` or Inspect the Diff Against the Review Rubric
 
-1. Run `git diff` (and inspect any untracked source files) to review the logic changes.
-2. Evaluate all changes against [review-checklist.md](./references/review-checklist.md) (Security, Frontend/Playground Parity, Backend/Test Isolation, and Repo Hygiene).
+1. For multi-file tasks or after any mid-task requirement change/pivot, spawn the **`code-reviewer`** subagent (`invoke_subagent(TypeName: "code-reviewer", ...)`) to independently audit `git diff` and all untracked files across every layer (Backend interfaces/handlers, Frontend components/providers, Tests, and Docs).
+2. Evaluate all changes against [review-checklist.md](./references/review-checklist.md) (Security, Frontend/Playground Parity, Backend/Test Isolation, Orphaned Code / Mid-Task Pivot Cleanup, and Repo Hygiene).
 
-## Step 3: Fix Blockers or Report Readiness
+## Step 3: Fix Blockers & Orphaned Code Before Reporting Readiness
 
-- If you find `[BLOCKER]` issues caused by recent edits (such as an `: any` type, a stray `.db` file created by a test, or a missing version bump), fix them immediately and re-run Step 1.
+- If `code-reviewer` or `audit-working-tree.sh` finds `[BLOCKER]` or `[WARNING]` issues (such as leftover structs/params from a discarded feature iteration, redundant wrapper functions, unreferenced untracked files, an `: any` type, a stray `.db` file, or a missing version bump), fix them immediately and re-run Step 1.
 - Present a concise **Pre-Commit Readiness Summary** listing:
   - Modified & untracked files ready for staging
   - Any `[BLOCKER]` / `[WARNING]` / `[NIT]` findings
