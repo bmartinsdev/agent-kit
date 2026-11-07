@@ -20,7 +20,7 @@ Use this skill to decide when to execute directly vs. when to delegate to specia
 | **Single-Layer / Quick Task** *(1–2 files, bug fix, small tweak, question)* | **Direct Execution** | Handle directly in the main conversation using the relevant domain skill (`ui-design-system`, `test-architect`, etc.). |
 | **Full-Stack Feature / Plugin** *(Backend API + Frontend UI + Tests + Docs)* | **Multi-Agent Pipeline** | After the Task Re-Evaluation Gate locks down the contract, spawn **`backend-architect`** and **`ui-designer`** in parallel, followed by **`qa-architect`**, **`docs-keeper`**, and **`code-reviewer`**. |
 | **Multi-Screen UI Audit / Redesign** *(Auditing or restyling multiple screens/sections)* | **Subagent Delegation** | Run the Task Re-Evaluation Gate with **`ui-designer`**, then execute equipped with `ui-design-system` and Mobbin skills. |
-| **Pre-Commit Quality Gate** *(Before handing back a multi-file change or when asked to review)* | **Critic Gate** | Run **`pre-commit-audit`** directly or spawn **`code-reviewer`** to verify the working tree and `git diff`. |
+| **Pre-Commit & Post-Pivot Critic Gate** *(Before handing back a multi-file change or after any mid-task requirement pivot)* | **Mandatory `code-reviewer` Subagent Gate** | Spawn **`code-reviewer`** (`invoke_subagent(TypeName: "code-reviewer", ...)`) to audit `git diff` across all layers for leftover/orphaned code, redundant wrappers, and unreferenced untracked files. |
 | **Post-Approval Change Closure** *(User approves the completed work or asks to commit/close)* | **Close-Change Gate** | Run **`close-change`** (`commit-approved-change.sh`) to stage, run pre-commit hooks, and create the Conventional Commit. |
 | **Rule / Workflow Correction** *(User teaches a new habit or rule)* | **Self-Improvement** | Run **`kit-evolver`** to route the lesson into `agent-kit` vs. project `AGENTS.md`. |
 
@@ -39,8 +39,9 @@ Whenever starting a task or milestone from `tasks/`, execute this 4-phase lifecy
 3. **Phase 3 — Spec Lock-In & Execution**:
    - Update the `tasks/*.md` spec(s) to reflect the user's answers so the spec is the single source of truth.
    - Proceed to implementation with the locked handoff contracts. Because plugin-bundled `agents/*.md` subagents (`TypeName: "<agent-name>"`) run with read-only tools (which enforces safety during Phase 1 audits and `code-reviewer` gates), spawn Phase 3 implementation specialists using `define_subagent(..., EnableWriteTools: true)` or `invoke_subagent(TypeName: "self", Role: "<Specialist Role>", ...)`.
-4. **Phase 4 — Pre-Commit Audit & Post-Approval Change Closure (`close-change`)**:
-   - Run `pre-commit-audit` (`audit-working-tree.sh`) and `check-doc-drift.sh`, then present the **Pre-Commit Readiness Summary** to the user.
+4. **Phase 4 — Mandatory `code-reviewer` Subagent Gate & Post-Approval Change Closure (`close-change`)**:
+   - Before presenting completed work to the user—and **especially after any mid-task requirement change or scope reduction**—spawn the **`code-reviewer`** subagent (`invoke_subagent(TypeName: "code-reviewer", ...)`) to run `audit-working-tree.sh` and inspect the full `git diff` across all layers for orphaned/leftover code from earlier iterations, redundant wrapper methods, and unreferenced untracked files.
+   - Fix all `[BLOCKER]` and `[WARNING]` findings returned by `code-reviewer`, run `check-doc-drift.sh`, and present the **Pre-Commit Readiness Summary** to the user.
    - Once the user approves the changes (or asks to close/commit the change), execute **`close-change`** (`commit-approved-change.sh`) to stage all files, trigger pre-commit hooks, and create the Conventional Commit.
 
 ---

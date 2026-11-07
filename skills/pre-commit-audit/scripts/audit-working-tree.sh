@@ -60,3 +60,22 @@ if [ -n "$GO_CHANGED" ]; then
 else
   echo "  [OK] No non-test Go daemon files modified."
 fi
+
+echo ""
+echo "--- 5. Unreferenced Untracked Source Files Check ---"
+UNTRACKED_SRC=$(git status --porcelain | awk '$1 == "??" {print $2}' | grep -E '^src/.*\.(ts|tsx)$' | grep -vE '\.test\.(ts|tsx)$|/(page|layout|providers)\.(ts|tsx)$' || true)
+ORPHAN_COUNT=0
+if [ -n "$UNTRACKED_SRC" ]; then
+  for uf in $UNTRACKED_SRC; do
+    [ -f "$uf" ] || continue
+    base_no_ext=$(basename "$uf" | sed -E 's/\.(ts|tsx)$//')
+    ref_count=$(grep -rnw "$base_no_ext" src/ --exclude="$(basename "$uf")" --exclude="${base_no_ext}.test.ts" --exclude="${base_no_ext}.test.tsx" 2>/dev/null | wc -l)
+    if [ "$ref_count" -eq 0 ]; then
+      echo "  [BLOCKER] Unreferenced untracked source file (not imported anywhere in src/): $uf"
+      ORPHAN_COUNT=$((ORPHAN_COUNT + 1))
+    fi
+  done
+fi
+if [ "$ORPHAN_COUNT" -eq 0 ]; then
+  echo "  [OK] All untracked TS/TSX source files are referenced in src/."
+fi
