@@ -39,10 +39,14 @@ Whenever starting a task or milestone from `tasks/`, execute this 4-phase lifecy
 3. **Phase 3 — Spec Lock-In & Execution**:
    - Update the `tasks/*.md` spec(s) to reflect the user's answers so the spec is the single source of truth.
    - Proceed to implementation with the locked handoff contracts. Because plugin-bundled `agents/*.md` subagents (`TypeName: "<agent-name>"`) run with read-only tools (which enforces safety during Phase 1 audits and `code-reviewer` gates), spawn Phase 3 implementation specialists using `define_subagent(..., EnableWriteTools: true)` or `invoke_subagent(TypeName: "self", Role: "<Specialist Role>", ...)`.
-4. **Phase 4 — Mandatory `code-reviewer` Subagent Gate & Post-Approval Change Closure (`close-change`)**:
+4. **Phase 4 — Mandatory `code-reviewer` Gate, Manual Testing Guide & Post-Approval Change Closure (`close-change`)**:
    - Before presenting completed work to the user—and **especially after any mid-task requirement change or scope reduction**—spawn the **`code-reviewer`** subagent (`invoke_subagent(TypeName: "code-reviewer", ...)`) to run `audit-working-tree.sh` and inspect the full `git diff` across all layers for orphaned/leftover code from earlier iterations, redundant wrapper methods, and unreferenced untracked files.
-   - Fix all `[BLOCKER]` and `[WARNING]` findings returned by `code-reviewer`, run `check-doc-drift.sh`, and present the **Pre-Commit Readiness Summary** to the user.
-   - Once the user approves the changes (or asks to close/commit the change), execute **`close-change`** (`commit-approved-change.sh`) to stage all files, trigger pre-commit hooks, and create the Conventional Commit.
+   - Fix all `[BLOCKER]` and `[WARNING]` findings returned by `code-reviewer` and run `check-doc-drift.sh`.
+   - Present the **Pre-Approval Summary of Changes & Manual Testing Guide** (see [handoff-contracts.md](./references/handoff-contracts.md)) to the user, detailing:
+     1. **Summary of Changes** grouped by feature/layer with clickable file links.
+     2. **How to Test Before Approving** with step-by-step manual verification flows (dev server startup command, UI Playground `/kitchen` checks, and main application end-to-end flows).
+     3. **Automated Verification Status** (`code-reviewer` audit, ESLint, backend & frontend unit test results).
+   - Once the user tests and explicitly approves the changes (or asks to close/commit the change), execute **`close-change`** (`commit-approved-change.sh`) to stage all files, trigger pre-commit hooks, and create the Conventional Commit.
 
 ---
 

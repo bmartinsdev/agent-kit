@@ -10,7 +10,7 @@ A portable, cross-project Antigravity plugin providing a **6-Agent Specialist Wo
 flowchart TD
     subgraph Kit["🛠️ agent-kit (Global Antigravity Plugin)"]
         Hooks["🔒 Hooks & Guards\n• SessionStart (auto-onboard & drift check)\n• PreToolUse (blocks raw git commit/push/add)"]
-        GlobalRules["📜 Global Rules (rules/AGENTS.md)\n• Git & Hook Discipline\n• Hybrid Workforce Protocol\n• Mandatory Task Re-Evaluation Gate\n• Mandatory Code-Reviewer Critic Gate\n• Post-Approval Change Closure"]
+        GlobalRules["📜 Global Rules (rules/AGENTS.md)\n• Git & Hook Discipline\n• Hybrid Workforce Protocol\n• Mandatory Task Re-Evaluation Gate\n• Mandatory Code-Reviewer Critic Gate\n• Pre-Approval Summary & Testing Guide\n• Post-Approval Change Closure"]
         RuleLib["📚 Conditional Rule Library (8 Modules)\n• typescript-strict, react-nextjs, ui-playground-first\n• go-daemon, vitest-testing, sqlite-wsl\n• database-orm, docker-ci"]
         Skills["⚡ 10 Universal Skills + Scripts\n• project-onboarding-auditor, feature-discovery\n• workforce-orchestrator, fullstack-feature-scaffolder\n• ui-design-system, test-architect, spec-and-docs-keeper\n• pre-commit-audit, close-change, kit-evolver"]
         Agents["🤖 6 Specialist Subagents\n• ui-designer • backend-architect\n• qa-architect • docs-keeper\n• code-reviewer • change-closer"]
@@ -18,7 +18,7 @@ flowchart TD
 
     subgraph Workspace["📁 Any Project Workspace"]
         ProjectRules["🗂️ Portable Project Rules\n• .agents/rules-library/*.md\n• .agents/AGENTS.md & scoped AGENTS.md"]
-        Workflow["🔄 Development Lifecycle\nSpec Re-Eval Gate ➔ Orchestrate ➔ Code-Reviewer Gate ➔ Close Change"]
+        Workflow["🔄 Development Lifecycle\nSpec Re-Eval Gate ➔ Orchestrate ➔ Code-Reviewer Gate ➔ Summary & Test Guide ➔ Close Change"]
     end
 
     Hooks -->|"Detects unconfigured repo or rule drift"| Skills
